@@ -72,12 +72,13 @@ export const works: Work[] = [
     facts: [
       { label: "Type", value: "Dataset and generation pipeline" },
       { label: "Language", value: "Turkish" },
-      { label: "Published on", value: "Hugging Face · ilynt" },
+      { label: "Release", value: "Planned on Hugging Face" },
     ],
     areas: ["tool-calling", "agents", "data-pipelines", "developer-infrastructure"],
     audience: "Developers and researchers who train, fine-tune or evaluate Turkish language models and agent systems.",
     inLanguage: "tr",
-    links: [{ label: "Ilynt Labs on Hugging Face", href: "https://huggingface.co/ilynt" }],
+    // No public link until the dataset is published.
+    links: [],
     notes: [{ text: "Generation pipeline and quality checks in development." }],
   },
 ];

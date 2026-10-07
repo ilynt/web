@@ -42,7 +42,7 @@ export default function SolutionsPage() {
                 <p className="meta text-faint md:col-span-1">S{String(i + 1).padStart(2, "0")}</p>
                 <div className="md:col-span-5">
                   <h2 className="text-3xl font-medium tracking-tight md:text-4xl">
-                    <Link href={`/solutions/${s.slug}`} className="hover:text-accent">
+                    <Link href={`/solutions/${s.slug}`} className="inline-block py-1 hover:text-accent">
                       {s.name}
                     </Link>
                   </h2>

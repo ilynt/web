@@ -1,24 +1,25 @@
 import Link from "next/link";
 import { BriefingAnatomy } from "@/components/briefing-anatomy";
 import { Decode } from "@/components/decode";
-import { DispatchClock } from "@/components/dispatch-clock";
 import { InView } from "@/components/in-view";
 import { JsonLd } from "@/components/json-ld";
 import { PageShell } from "@/components/page-shell";
-import { Pipeline } from "@/components/pipeline";
 import { RiseText } from "@/components/rise-text";
 import { SectionHead } from "@/components/section-head";
 import { SignalField } from "@/components/signal-field";
 import { WorkIndex } from "@/components/work-index";
 import { services, supporters } from "@/content/services";
 import { areas, founder, site } from "@/content/site";
-import { getWork, nextWorkId, statusLabel, workPath, works } from "@/content/works";
+import { getWork, kindLabel, nextWorkId, statusLabel, workPath, works } from "@/content/works";
 import { toIndexRows } from "@/lib/index-rows";
 import { graph, workLd } from "@/lib/seo";
 
 export default function HomePage() {
   const sinyra = getWork("sinyra")!;
   const liveCount = works.filter((w) => w.status === "live").length;
+  const releaseFacts = sinyra.facts.filter((f) =>
+    ["Delivery", "Language", "Price", "Active subscribers"].includes(f.label),
+  );
 
   return (
     <PageShell>
@@ -39,8 +40,8 @@ export default function HomePage() {
               </span>
             </h1>
             <p className="prose-lab fade-up mt-8 max-w-xl text-lg" style={{ "--d": "550ms" } as React.CSSProperties}>
-              We work on RAG, tool calling, agents, data pipelines and automation. Our first product, Sinyra, is live
-              with {sinyra.stat?.value} {sinyra.stat?.label}. We also build AI systems for organizations.
+              We work on RAG, tool calling, agents, data pipelines and automation — shipping our own products and
+              building AI systems for organizations.
             </p>
             <div className="fade-up mt-10 flex flex-wrap gap-3" style={{ "--d": "700ms" } as React.CSSProperties}>
               <Link href="#work" className="btn btn-primary">
@@ -65,9 +66,9 @@ export default function HomePage() {
               </dd>
             </div>
             <div className="bg-bg/90 p-4 backdrop-blur">
-              <dt className="text-faint">IL-001 Sinyra</dt>
-              <dd className="mt-2 text-muted">
-                <DispatchClock />
+              <dt className="text-faint">Latest release</dt>
+              <dd className="mt-2 text-fg">
+                {sinyra.id} {sinyra.name} · {statusLabel[sinyra.status]}
               </dd>
             </div>
             <div className="bg-bg/90 p-4 backdrop-blur">
@@ -83,63 +84,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured product */}
-      <section aria-labelledby="sinyra-title" className="wrap pt-28 md:pt-40">
-        <div className="grid gap-16 md:grid-cols-12 md:gap-8">
-          <div className="reveal md:col-span-6">
-            <p className="meta flex flex-wrap items-center gap-x-4 gap-y-2 text-faint">
-              <span>
-                <span className="text-accent">01</span> — First product · {sinyra.id}
-              </span>
-              <span className="status live-dot" data-status={sinyra.status}>
-                {statusLabel[sinyra.status]}
-              </span>
-            </p>
-            <h2 id="sinyra-title" className="display mt-8 text-[clamp(3.5rem,10vw,9rem)]">
-              {sinyra.name}
-            </h2>
-            <p className="mt-6 max-w-lg text-xl leading-snug md:text-2xl">{sinyra.tagline}</p>
-            <div className="prose-lab mt-8 max-w-lg">
-              <p>{sinyra.summary}</p>
-              <p>{sinyra.rationale}</p>
-            </div>
-            <div className="mt-10 flex flex-wrap gap-3">
-              <a href={sinyra.links[0].href} className="btn btn-primary">
-                {sinyra.links[0].label} <span className="arrow">↗</span>
-              </a>
-              <Link href={workPath(sinyra)} className="btn">
-                Product details <span className="arrow">→</span>
-              </Link>
-            </div>
-          </div>
-          <div className="reveal md:col-span-5 md:col-start-8 md:pt-24">
-            <BriefingAnatomy />
-          </div>
-        </div>
-
-        <div className="reveal mt-24 border-t border-line pt-10">
-          <h3 className="meta mb-10 text-faint">How Sinyra works</h3>
-          <Pipeline steps={sinyra.steps!} />
-        </div>
-
-        <InView
-          as="dl"
-          className="mt-20 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-line bg-line md:grid-cols-6"
-        >
-          {sinyra.facts.map((f, i) => (
-            <div key={f.label} className="cell bg-bg p-5" style={{ "--c": i } as React.CSSProperties}>
-              <dt className="meta text-faint">{f.label}</dt>
-              <dd className="mt-3 text-lg leading-tight">{f.value}</dd>
-            </div>
-          ))}
-        </InView>
-        <p className="meta mt-4 text-faint">{sinyra.notes?.map((n) => n.text.replace(/\.$/, "")).join(" · ")}</p>
-      </section>
-
       {/* Lab index */}
       <section id="work" aria-labelledby="work-title" className="wrap scroll-mt-20 pt-32 md:pt-44">
         <SectionHead
-          no="02"
+          no="01"
           label="Lab index"
           id="work-title"
           title="Every product, dataset and experiment gets the next number."
@@ -154,50 +102,53 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Areas */}
-      <section aria-labelledby="areas-title" className="wrap pt-32 md:pt-44">
-        <SectionHead no="03" label="Areas" id="areas-title" title="What we work on" />
-        <dl className="mt-16 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
-          {areas.map((area) => {
-            const related = works.filter((w) => w.areas.includes(area.id));
-            return (
-              <div key={area.id} className="reveal flex flex-col bg-bg p-6">
-                <dt className="text-lg font-medium">{area.name}</dt>
-                <dd className="mt-3 flex-1 text-sm leading-relaxed text-muted">{area.definition}</dd>
-                <dd className="meta mt-6 flex gap-3 text-faint">
-                  {related.length > 0 ? (
-                    related.map((w) => (
-                      <Link key={w.id} href={workPath(w)} className="hover:text-accent">
-                        {w.id}
-                      </Link>
-                    ))
-                  ) : (
-                    <Link href="/solutions" className="hover:text-accent">
-                      Solutions
-                    </Link>
-                  )}
-                </dd>
-              </div>
-            );
-          })}
-          <div className="hidden flex-col bg-bg p-6 lg:flex">
-            <dt className="text-lg font-medium">Next areas</dt>
-            <dd className="mt-3 flex-1 text-sm leading-relaxed text-muted">
-              New entries extend this map as the lab index grows.
-            </dd>
-            <dd className="meta mt-6">
-              <Link href="/lab" className="text-muted hover:text-accent">
-                Full lab index →
+      {/* Latest release: one compact panel, details live on the product page */}
+      <section aria-labelledby="release-title" className="wrap pt-28 md:pt-36">
+        <p className="meta text-faint">
+          <span className="text-accent">02</span> — <Decode text="Latest release" />
+        </p>
+        <div className="reveal mt-8 grid gap-10 rounded-xl border border-line p-6 md:grid-cols-12 md:gap-8 md:p-10">
+          <div className="md:col-span-7">
+            <p className="meta flex flex-wrap items-center gap-x-4 gap-y-2 text-faint">
+              <span>
+                {sinyra.id} · {kindLabel[sinyra.kind]}
+              </span>
+              <span className="status live-dot" data-status={sinyra.status}>
+                {statusLabel[sinyra.status]}
+              </span>
+            </p>
+            <h2 id="release-title" className="display mt-6 text-[clamp(2.5rem,5vw,4rem)]">
+              {sinyra.name}
+            </h2>
+            <p className="mt-4 max-w-xl text-lg leading-snug md:text-xl">{sinyra.tagline}</p>
+            <p className="prose-lab mt-6 max-w-xl">{sinyra.summary}</p>
+            <InView as="dl" className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-line pt-6 sm:grid-cols-4">
+              {releaseFacts.map((f, i) => (
+                <div key={f.label} className="cell" style={{ "--c": i } as React.CSSProperties}>
+                  <dt className="meta text-faint">{f.label}</dt>
+                  <dd className="mt-2">{f.value}</dd>
+                </div>
+              ))}
+            </InView>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href={workPath(sinyra)} className="btn btn-primary">
+                Product details <span className="arrow">→</span>
               </Link>
-            </dd>
+              <a href={sinyra.links[0].href} className="btn">
+                {sinyra.links[0].label} <span className="arrow">↗</span>
+              </a>
+            </div>
           </div>
-        </dl>
+          <div className="md:col-span-4 md:col-start-9">
+            <BriefingAnatomy />
+          </div>
+        </div>
       </section>
 
       {/* Solutions */}
       <section aria-labelledby="solutions-title" className="wrap pt-32 md:pt-44">
         <SectionHead
-          no="04"
+          no="03"
           label="For organizations"
           id="solutions-title"
           title={
@@ -238,6 +189,46 @@ export default function HomePage() {
             Discuss a RAG project
           </Link>
         </p>
+      </section>
+
+      {/* Areas */}
+      <section aria-labelledby="areas-title" className="wrap pt-32 md:pt-44">
+        <SectionHead no="04" label="Areas" id="areas-title" title="What we work on" />
+        <dl className="mt-16 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+          {areas.map((area) => {
+            const related = works.filter((w) => w.areas.includes(area.id));
+            return (
+              <div key={area.id} className="reveal flex flex-col bg-bg p-6">
+                <dt className="text-lg font-medium">{area.name}</dt>
+                <dd className="mt-3 flex-1 text-sm leading-relaxed text-muted">{area.definition}</dd>
+                <dd className="meta mt-6 flex gap-3 text-faint">
+                  {related.length > 0 ? (
+                    related.map((w) => (
+                      <Link key={w.id} href={workPath(w)} className="inline-block py-1 hover:text-accent">
+                        {w.id}
+                      </Link>
+                    ))
+                  ) : (
+                    <Link href="/solutions" className="inline-block py-1 hover:text-accent">
+                      Solutions
+                    </Link>
+                  )}
+                </dd>
+              </div>
+            );
+          })}
+          <div className="hidden flex-col bg-bg p-6 lg:flex">
+            <dt className="text-lg font-medium">For your organization</dt>
+            <dd className="mt-3 flex-1 text-sm leading-relaxed text-muted">
+              RAG, tool calling and automation built around your own documents, systems and data rules.
+            </dd>
+            <dd className="meta mt-6">
+              <Link href="/solutions" className="inline-block py-1 text-muted hover:text-accent">
+                Solutions →
+              </Link>
+            </dd>
+          </div>
+        </dl>
       </section>
 
       {/* Supporters — renders only when there are real entries */}

@@ -17,6 +17,8 @@ function rateLimited(ip: string) {
 }
 
 const clean = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+// Single-line fields end up in the subject and headers: strip line breaks.
+const line = (v: unknown, max: number) => clean(v, max).replace(/[\r\n]+/g, " ");
 
 export async function POST(request: Request) {
   let body: Partial<ContactPayload>;
@@ -33,13 +35,13 @@ export async function POST(request: Request) {
   if (rateLimited(ip)) return Response.json({ error: "rate_limited" }, { status: 429 });
 
   const data = {
-    name: clean(body.name, 120),
-    email: clean(body.email, 200),
-    organization: clean(body.organization, 160),
-    topic: clean(body.topic, 60),
+    name: line(body.name, 120),
+    email: line(body.email, 200),
+    organization: line(body.organization, 160),
+    topic: line(body.topic, 60),
     message: clean(body.message, 5000),
-    deployment: clean(body.deployment, 60),
-    volume: clean(body.volume, 120),
+    deployment: line(body.deployment, 60),
+    volume: line(body.volume, 120),
   };
 
   const topic = contactTopics.find((t) => t.id === data.topic);

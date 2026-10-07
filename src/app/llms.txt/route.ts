@@ -21,7 +21,7 @@ export function GET() {
     ...works.map(
       (w) =>
         `- [${w.id} ${w.name}](${absoluteUrl(workPath(w))}): ${kindLabel[w.kind]}, ${statusLabel[w.status].toLowerCase()}. ${w.summary}` +
-        (w.links[0] ? ` Official page: ${w.links[0].href}` : ""),
+        (w.status === "live" && w.links[0] ? ` Official page: ${w.links[0].href}` : ""),
     ),
     "",
     "## Solutions for organizations",

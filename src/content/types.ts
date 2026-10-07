@@ -71,6 +71,10 @@ export type Service = {
   includes: string[];
   fit: string[];
   areas: AreaId[];
+  /** How the system works, rendered as a pipeline. */
+  steps?: { title: string; text: string }[];
+  /** Slugs of lab entries that genuinely relate to this service. */
+  relatedWorks?: string[];
 };
 
 export type Supporter = {

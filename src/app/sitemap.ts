@@ -13,5 +13,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/about", priority: 0.6 },
     { path: "/contact", priority: 0.5 },
   ];
-  return pages.map((p) => ({ url: absoluteUrl(p.path), changeFrequency: "weekly", priority: p.priority }));
+  // The site is fully static, so the build time is when every page last changed.
+  const lastModified = new Date();
+  return pages.map((p) => ({
+    url: absoluteUrl(p.path),
+    lastModified,
+    changeFrequency: "weekly",
+    priority: p.priority,
+  }));
 }

@@ -29,6 +29,13 @@ export const services: Service[] = [
       "Technical documentation and product knowledge",
     ],
     areas: ["rag", "data-pipelines"],
+    steps: [
+      { title: "Ingest", text: "Documents are pulled from connected sources and kept in sync." },
+      { title: "Index", text: "Content is split into passages and indexed for search, with access rules attached." },
+      { title: "Retrieve", text: "A question is matched against the passages the user is allowed to see." },
+      { title: "Answer", text: "The model writes an answer using only the retrieved passages." },
+      { title: "Cite", text: "Each answer links back to the source document and passage." },
+    ],
   },
   {
     slug: "custom-ai-systems",
@@ -54,6 +61,7 @@ export const services: Service[] = [
       "Work that extracts structured information from unstructured data",
     ],
     areas: ["agents", "tool-calling", "automation", "data-pipelines"],
+    relatedWorks: ["sinyra", "turkish-tool-calling-dataset"],
   },
   {
     slug: "web-and-app-development",

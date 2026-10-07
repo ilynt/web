@@ -49,7 +49,7 @@ export function organizationLd(): Json {
     name: site.name,
     legalName: site.legalName,
     url: site.url,
-    logo: absoluteUrl("/icon.svg"),
+    logo: absoluteUrl("/logo.png"),
     email: site.email,
     description: site.description,
     foundingLocation: { "@type": "Country", name: "Türkiye" },
@@ -111,7 +111,8 @@ export function workLd(work: Work): Json {
       publisher: { "@id": ids.organization },
     };
   }
-  if (work.kind === "dataset") {
+  // Only published datasets are described as schema.org Datasets.
+  if (work.kind === "dataset" && work.status === "live") {
     return {
       "@type": "Dataset",
       "@id": `${url}#dataset`,
@@ -120,7 +121,6 @@ export function workLd(work: Work): Json {
       description: work.summary,
       inLanguage: work.inLanguage,
       creator: { "@id": ids.organization },
-      creativeWorkStatus: work.status === "live" ? "Published" : "Incomplete",
     };
   }
   return {
@@ -130,6 +130,7 @@ export function workLd(work: Work): Json {
     url,
     description: work.summary,
     inLanguage: work.inLanguage,
+    creativeWorkStatus: work.status === "live" ? "Published" : "In development",
     creator: { "@id": ids.organization },
   };
 }

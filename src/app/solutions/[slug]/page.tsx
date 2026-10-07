@@ -2,6 +2,7 @@ import { PageShell } from "@/components/page-shell";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/json-ld";
+import { Pipeline } from "@/components/pipeline";
 import { getService, services } from "@/content/services";
 import { getArea, site } from "@/content/site";
 import { workPath, works } from "@/content/works";
@@ -24,7 +25,7 @@ export default async function ServicePage({ params }: PageProps<"/solutions/[slu
   const { slug } = await params;
   const service = getService(slug);
   if (!service) notFound();
-  const related = works.filter((w) => w.areas.some((a) => service.areas.includes(a)));
+  const related = works.filter((w) => service.relatedWorks?.includes(w.slug));
 
   return (
     <PageShell>
@@ -42,7 +43,7 @@ export default async function ServicePage({ params }: PageProps<"/solutions/[slu
         <nav aria-label="Breadcrumb" className="meta text-faint">
           <ol className="flex flex-wrap gap-2">
             <li>
-              <Link href="/solutions" className="hover:text-fg">
+              <Link href="/solutions" className="inline-block py-1 hover:text-fg">
                 Solutions
               </Link>
             </li>
@@ -114,6 +115,15 @@ export default async function ServicePage({ params }: PageProps<"/solutions/[slu
             </section>
           </div>
         </div>
+
+        {service.steps && (
+          <section aria-labelledby="how" className="mt-24 border-t border-line pt-10">
+            <h2 id="how" className="meta mb-10 text-faint">
+              How it works
+            </h2>
+            <Pipeline steps={service.steps} />
+          </section>
+        )}
 
         {related.length > 0 && (
           <section aria-labelledby="related" className="mt-24 border-t border-line pt-10">

@@ -4,6 +4,7 @@ import type { Work } from "@/content/types";
 import { kindLabel, statusLabel, workPath, works } from "@/content/works";
 import { breadcrumbLd, graph, workLd } from "@/lib/seo";
 import { BriefingAnatomy } from "./briefing-anatomy";
+import { DispatchClock } from "./dispatch-clock";
 import { JsonLd } from "./json-ld";
 import { PageShell, WorkTitleTransition } from "./page-shell";
 import { Pipeline } from "./pipeline";
@@ -11,7 +12,14 @@ import { WorkGlyph } from "./work-glyph";
 
 // Optional per-entry visuals, keyed by slug.
 const visuals: Record<string, React.ReactNode> = {
-  sinyra: <BriefingAnatomy />,
+  sinyra: (
+    <>
+      <BriefingAnatomy />
+      <p className="meta mt-3 text-muted">
+        <DispatchClock />
+      </p>
+    </>
+  ),
 };
 
 export function WorkDetail({ work }: { work: Work }) {
@@ -33,7 +41,7 @@ export function WorkDetail({ work }: { work: Work }) {
         <nav aria-label="Breadcrumb" className="meta text-faint">
           <ol className="flex flex-wrap gap-2">
             <li>
-              <Link href="/lab" className="hover:text-fg">
+              <Link href="/lab" className="inline-block py-1 hover:text-fg">
                 Lab index
               </Link>
             </li>

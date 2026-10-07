@@ -28,10 +28,14 @@ Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 (CSS-first 
 
 - `site.ts` — organization facts, founder, official profiles, work areas.
 - `works.ts` — the **lab index**: every product, dataset, experiment and open-source project as a `Work` with a sequential id (`IL-001`, `IL-002`, …) and a `status` (`live` / `building` / `research`). `kind: "product"` routes to `/products/[slug]`; every other kind routes to `/lab/[slug]` (`workPath()`). Never renumber ids; append new entries at the end.
-- `services.ts` — solutions for organizations (`/solutions/[slug]`) and `supporters` (the homepage supporters section renders only when this array is non-empty).
+- `services.ts` — solutions for organizations (`/solutions/[slug]`; optional `steps` render a pipeline, `relatedWorks` lists genuinely related lab slugs) and `supporters` (the homepage supporters section renders only when this array is non-empty).
 - `contact.ts` — contact form topics; `/contact?topic=<id>` preselects one. `enterprise-rag` reveals extra RAG fields.
 
 The same records feed the pages, JSON-LD (`src/lib/seo.ts`), `sitemap.ts`, `robots.ts`, `llms.txt/route.ts` and OG images (`src/lib/og.tsx` + `opengraph-image.tsx` files). Adding a `Work` or `Service` automatically adds its page, sitemap entry, structured data and llms.txt line — no homepage changes needed.
+
+**Homepage balance:** the homepage presents the lab first (hero → lab index → compact "latest release" panel → solutions → areas). Product depth (pipeline, all facts, dispatch countdown) belongs on the product page, not the homepage. Unpublished work must not link to empty destinations or be described as published (no `Dataset` JSON-LD until `status: "live"`).
+
+**Hosting:** Vercel project `ilyntlabs-web`; every push to `main` deploys production. `next.config.ts` sets security headers and 308-redirects the `ilyntlabs-web*.vercel.app` production aliases to `https://ilyntlabs.com`. Vercel Web Analytics is included via `<Analytics />` in the root layout (must be enabled in the Vercel dashboard).
 
 **SEO/GEO:** per-page metadata goes through `pageMetadata()` in `src/lib/seo.ts` (canonical, OG, Twitter). JSON-LD is rendered with `<JsonLd>` as a single `@graph`; Organization/WebSite/Person live in the root layout and are referenced by `@id` from page-level nodes (SoftwareApplication, Dataset, Service, BreadcrumbList, FAQPage). Important facts must exist as real HTML text, never only in canvas/animation.
 

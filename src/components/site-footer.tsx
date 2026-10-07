@@ -17,11 +17,11 @@ export function SiteFooter() {
 
         <nav aria-label="Lab index" className="md:col-span-3">
           <h2 className="meta mb-4 text-faint">Lab index</h2>
-          <ul className="space-y-2">
+          <ul className="space-y-1">
             {works.map((w) => (
               <li key={w.id} className="flex items-baseline gap-3">
                 <span className="meta text-faint">{w.id}</span>
-                <Link href={workPath(w)} className="hover:text-accent">
+                <Link href={workPath(w)} className="inline-block py-1 hover:text-accent">
                   {w.name}
                 </Link>
                 <span className="sr-only">({statusLabel[w.status]})</span>
@@ -32,10 +32,10 @@ export function SiteFooter() {
 
         <nav aria-label="Solutions" className="md:col-span-3">
           <h2 className="meta mb-4 text-faint">Solutions</h2>
-          <ul className="space-y-2">
+          <ul className="space-y-1">
             {services.map((s) => (
               <li key={s.slug}>
-                <Link href={`/solutions/${s.slug}`} className="hover:text-accent">
+                <Link href={`/solutions/${s.slug}`} className="inline-block py-1 hover:text-accent">
                   {s.name}
                 </Link>
               </li>
@@ -45,19 +45,19 @@ export function SiteFooter() {
 
         <div className="md:col-span-2">
           <h2 className="meta mb-4 text-faint">Elsewhere</h2>
-          <ul className="space-y-2">
+          <ul className="space-y-1">
             <li>
-              <a href={site.profiles.github} className="hover:text-accent" rel="me">
+              <a href={site.profiles.github} className="inline-block py-1 hover:text-accent" rel="me">
                 GitHub
               </a>
             </li>
             <li>
-              <a href={site.profiles.huggingface} className="hover:text-accent" rel="me">
+              <a href={site.profiles.huggingface} className="inline-block py-1 hover:text-accent" rel="me">
                 Hugging Face
               </a>
             </li>
             <li>
-              <a href={founder.linkedin} className="hover:text-accent">
+              <a href={founder.linkedin} className="inline-block py-1 hover:text-accent">
                 LinkedIn
               </a>
             </li>
@@ -86,13 +86,13 @@ export function SiteFooter() {
           © {year} {site.legalName}
         </p>
         <p className="flex gap-6">
-          <Link href="/about" className="hover:text-fg">
+          <Link href="/about" className="inline-block py-1 hover:text-fg">
             About
           </Link>
-          <a href="/llms.txt" className="hover:text-fg">
+          <a href="/llms.txt" className="inline-block py-1 hover:text-fg">
             llms.txt
           </a>
-          <a href="/sitemap.xml" className="hover:text-fg">
+          <a href="/sitemap.xml" className="inline-block py-1 hover:text-fg">
             Sitemap
           </a>
         </p>
