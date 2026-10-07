@@ -27,8 +27,7 @@ export const areas: Area[] = [
   {
     id: "ai-products",
     name: "AI products",
-    definition:
-      "Turning language models into end-user software that does one specific job from start to finish.",
+    definition: "Turning language models into end-user software that does one specific job from start to finish.",
   },
   {
     id: "rag",
@@ -45,14 +44,12 @@ export const areas: Area[] = [
   {
     id: "agents",
     name: "Agents",
-    definition:
-      "Multi-step workflows that plan, use tools and report results in a way that can be checked.",
+    definition: "Multi-step workflows that plan, use tools and report results in a way that can be checked.",
   },
   {
     id: "data-pipelines",
     name: "Data pipelines",
-    definition:
-      "Scheduled processes that collect, clean, classify and prepare data from many sources for models.",
+    definition: "Scheduled processes that collect, clean, classify and prepare data from many sources for models.",
   },
   {
     id: "automation",
@@ -63,8 +60,7 @@ export const areas: Area[] = [
   {
     id: "developer-infrastructure",
     name: "Developer infrastructure",
-    definition:
-      "Reusable tooling and open-source components for data generation, model evaluation and deployment.",
+    definition: "Reusable tooling and open-source components for data generation, model evaluation and deployment.",
   },
 ];
 

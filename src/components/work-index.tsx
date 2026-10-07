@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, ViewTransition } from "react";
+import { WorkGlyph } from "./work-glyph";
 
 export type IndexRow = {
   id: string;
+  slug: string;
   href: string;
   name: string;
   tagline: string;
@@ -77,11 +79,16 @@ export function WorkIndex({ rows, nextId }: { rows: IndexRow[]; nextId: string }
               className="group grid grid-cols-[auto_1fr] items-baseline gap-x-6 gap-y-2 py-6 transition-colors md:grid-cols-12 md:py-7"
               style={{ opacity: active && active.id !== row.id ? 0.4 : 1, transition: "opacity .4s" }}
             >
-              <span className="meta text-faint md:col-span-1">{row.id}</span>
+              <span className="flex flex-col gap-3 md:col-span-1">
+                <span className="meta text-faint">{row.id}</span>
+                <WorkGlyph seed={row.slug} status={row.status} className="size-7" />
+              </span>
               <span className="md:col-span-5">
-                <span className="block text-2xl font-medium tracking-tight transition-colors group-hover:text-accent md:text-3xl">
-                  {row.name}
-                </span>
+                <ViewTransition name={`work-${row.slug}`} share="morph" default="none">
+                  <span className="block w-fit text-2xl font-medium tracking-tight transition-colors group-hover:text-accent md:text-3xl">
+                    {row.name}
+                  </span>
+                </ViewTransition>
                 <span className="mt-2 block max-w-xl text-muted">{row.tagline}</span>
               </span>
               <span className="meta col-start-2 text-muted md:col-span-2 md:col-start-auto">{row.kind}</span>
@@ -96,7 +103,10 @@ export function WorkIndex({ rows, nextId }: { rows: IndexRow[]; nextId: string }
             </Link>
           </li>
         ))}
-        <li aria-hidden="true" className="grid grid-cols-[auto_1fr] items-baseline gap-x-6 py-6 text-faint md:grid-cols-12 md:py-7">
+        <li
+          aria-hidden="true"
+          className="grid grid-cols-[auto_1fr] items-baseline gap-x-6 py-6 text-faint md:grid-cols-12 md:py-7"
+        >
           <span className="meta md:col-span-1">{nextId}</span>
           <span className="md:col-span-11">
             <span className="caret opacity-60" />
@@ -114,7 +124,15 @@ export function WorkIndex({ rows, nextId }: { rows: IndexRow[]; nextId: string }
           {active && (
             <>
               <div className="flex items-baseline justify-between">
-                <span className="text-5xl font-medium tracking-tighter">{active.id.slice(3)}</span>
+                <span className="flex items-center gap-4">
+                  <WorkGlyph
+                    seed={active.slug}
+                    status={active.status}
+                    className="glyph-live size-12"
+                    key={active.slug}
+                  />
+                  <span className="text-4xl font-medium tracking-tighter">{active.id.slice(3)}</span>
+                </span>
                 <span className="meta status" data-status={active.status}>
                   {active.statusLabel}
                 </span>

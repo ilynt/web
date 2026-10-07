@@ -18,6 +18,7 @@ uniform float uTime;
 uniform vec2 uPointer;
 uniform float uPointerOn;
 uniform float uCell;
+uniform float uScroll;
 
 float hash(vec2 p) {
   p = fract(p * vec2(123.34, 456.21));
@@ -40,7 +41,8 @@ void main() {
   vec2 center = (id + 0.5) * uCell;
 
   float t = uTime;
-  float n = noise(id * 0.075 + vec2(t * 0.045, t * 0.03)) * 0.65
+  vec2 drift = vec2(t * 0.045, t * 0.03 - uScroll * 6.0);
+  float n = noise(id * 0.075 + drift) * 0.65
           + noise(id * 0.21 - vec2(t * 0.02, t * 0.05)) * 0.35;
   float signal = smoothstep(0.7, 0.9, n) * step(0.4, hash(id));
 
@@ -54,7 +56,7 @@ void main() {
   vec3 base = vec3(0.925, 0.92, 0.9);
   vec3 accent = vec3(0.784, 0.961, 0.235);
   vec3 col = mix(base, accent, smoothstep(0.35, 1.0, signal + ripple * 0.4));
-  float alpha = dotMask * mix(0.16, 0.95, energy);
+  float alpha = dotMask * mix(0.16, 0.95, energy) * (1.0 - clamp(uScroll, 0.0, 1.0) * 0.75);
   gl_FragColor = vec4(col * alpha, alpha);
 }
 `;
@@ -69,10 +71,20 @@ function compile(gl: WebGLRenderingContext, type: number, src: string) {
 export function SignalField({ className = "" }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [ready, setReady] = useState(false);
+  const [armed, setArmed] = useState(false);
+
+  // Start the GPU work once the main thread is idle, after hydration.
+  useEffect(() => {
+    const idle = "requestIdleCallback" in window;
+    const id = idle
+      ? window.requestIdleCallback(() => setArmed(true), { timeout: 1500 })
+      : window.setTimeout(() => setArmed(true), 300);
+    return () => (idle ? window.cancelIdleCallback(id) : window.clearTimeout(id));
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !armed) return;
     const gl = canvas.getContext("webgl", {
       alpha: true,
       antialias: false,
@@ -103,6 +115,16 @@ export function SignalField({ className = "" }: { className?: string }) {
     const uPointer = gl.getUniformLocation(prog, "uPointer");
     const uPointerOn = gl.getUniformLocation(prog, "uPointerOn");
     const uCell = gl.getUniformLocation(prog, "uCell");
+    const uScroll = gl.getUniformLocation(prog, "uScroll");
+    // Phones and touch devices: lower resolution and 30fps.
+    const lowPower = window.matchMedia("(pointer: coarse), (max-width: 767px)").matches;
+    let lastFrame = 0;
+    let scroll = 0;
+    const onScroll = () => {
+      const h = canvas.getBoundingClientRect().height || 1;
+      scroll = Math.min(1.5, window.scrollY / h);
+      if (reduced.matches) draw(18);
+    };
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     let dpr = 1;
@@ -112,7 +134,7 @@ export function SignalField({ className = "" }: { className?: string }) {
     const pointer = { x: -9999, y: -9999, tx: -9999, ty: -9999, on: 0, target: 0 };
 
     const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+      dpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1 : 1.75);
       const { width, height } = canvas.getBoundingClientRect();
       canvas.width = Math.max(1, Math.round(width * dpr));
       canvas.height = Math.max(1, Math.round(height * dpr));
@@ -129,11 +151,15 @@ export function SignalField({ className = "" }: { className?: string }) {
       gl.uniform2f(uPointer, pointer.x, pointer.y);
       gl.uniform1f(uPointerOn, reduced.matches ? 0 : pointer.on);
       gl.uniform1f(uCell, 16 * dpr);
+      gl.uniform1f(uScroll, scroll);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
 
     const loop = (now: number) => {
-      draw((now - start) / 1000 + 18);
+      if (!lowPower || now - lastFrame > 32) {
+        lastFrame = now;
+        draw((now - start) / 1000 + 18);
+      }
       raf = requestAnimationFrame(loop);
     };
 
@@ -172,6 +198,7 @@ export function SignalField({ className = "" }: { className?: string }) {
     document.addEventListener("visibilitychange", onVisibility);
     reduced.addEventListener("change", onMotionChange);
     window.addEventListener("pointermove", onPointer, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     document.documentElement.addEventListener("pointerleave", onLeave);
 
     resize();
@@ -186,10 +213,11 @@ export function SignalField({ className = "" }: { className?: string }) {
       document.removeEventListener("visibilitychange", onVisibility);
       reduced.removeEventListener("change", onMotionChange);
       window.removeEventListener("pointermove", onPointer);
+      window.removeEventListener("scroll", onScroll);
       document.documentElement.removeEventListener("pointerleave", onLeave);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
-  }, []);
+  }, [armed]);
 
   return (
     <div aria-hidden="true" className={`dot-grid ${className}`}>

@@ -1,8 +1,12 @@
 import Link from "next/link";
 import { BriefingAnatomy } from "@/components/briefing-anatomy";
+import { Decode } from "@/components/decode";
 import { DispatchClock } from "@/components/dispatch-clock";
+import { InView } from "@/components/in-view";
 import { JsonLd } from "@/components/json-ld";
+import { PageShell } from "@/components/page-shell";
 import { Pipeline } from "@/components/pipeline";
+import { RiseText } from "@/components/rise-text";
 import { SectionHead } from "@/components/section-head";
 import { SignalField } from "@/components/signal-field";
 import { WorkIndex } from "@/components/work-index";
@@ -17,7 +21,7 @@ export default function HomePage() {
   const liveCount = works.filter((w) => w.status === "live").length;
 
   return (
-    <>
+    <PageShell>
       <JsonLd data={graph(...works.map(workLd))} />
 
       {/* Hero */}
@@ -25,16 +29,20 @@ export default function HomePage() {
         <SignalField className="absolute inset-y-0 right-0 w-full [mask-image:linear-gradient(to_right,transparent_0%,black_55%)] md:w-[68%] md:[mask-image:linear-gradient(to_right,transparent,black_35%,black_85%,transparent)]" />
         <div className="wrap relative flex min-h-[calc(100svh-4rem)] flex-col justify-between gap-16 pb-8 pt-20 md:pt-28">
           <div className="max-w-5xl">
-            <p className="meta text-muted">Independent AI product &amp; R&amp;D studio — Türkiye</p>
-            <h1 id="hero-title" className="display mt-8 text-[clamp(2.75rem,8vw,7.25rem)]">
-              Ilynt Labs builds AI products, datasets and systems <span className="serif text-accent">— and ships them.</span>
-            </h1>
-            <p className="prose-lab mt-8 max-w-xl text-lg">
-              We work on RAG, tool calling, agents, data pipelines and automation. Our first product, Sinyra, is live
-              with {sinyra.stat?.value} {sinyra.stat?.label}.
-              We also build AI systems for organizations.
+            <p className="meta text-muted">
+              <Decode text="Independent AI product & R&D studio — Türkiye" />
             </p>
-            <div className="mt-10 flex flex-wrap gap-3">
+            <h1 id="hero-title" className="display mt-8 text-[clamp(2.75rem,8vw,7.25rem)]">
+              <RiseText text="Ilynt Labs builds AI products, datasets and systems" />{" "}
+              <span className="serif text-accent">
+                <RiseText text="— and ships them." offset={8} />
+              </span>
+            </h1>
+            <p className="prose-lab fade-up mt-8 max-w-xl text-lg" style={{ "--d": "550ms" } as React.CSSProperties}>
+              We work on RAG, tool calling, agents, data pipelines and automation. Our first product, Sinyra, is live
+              with {sinyra.stat?.value} {sinyra.stat?.label}. We also build AI systems for organizations.
+            </p>
+            <div className="fade-up mt-10 flex flex-wrap gap-3" style={{ "--d": "700ms" } as React.CSSProperties}>
               <Link href="#work" className="btn btn-primary">
                 See the work <span className="arrow">↓</span>
               </Link>
@@ -45,7 +53,10 @@ export default function HomePage() {
           </div>
 
           {/* Lab console: what is running right now */}
-          <dl className="meta grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-3">
+          <dl
+            className="meta fade-up grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-3"
+            style={{ "--d": "900ms" } as React.CSSProperties}
+          >
             <div className="bg-bg/90 p-4 backdrop-blur">
               <dt className="text-faint">Index</dt>
               <dd className="mt-2 text-fg">
@@ -111,20 +122,28 @@ export default function HomePage() {
           <Pipeline steps={sinyra.steps!} />
         </div>
 
-        <dl className="reveal mt-20 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-line bg-line md:grid-cols-6">
-          {sinyra.facts.map((f) => (
-            <div key={f.label} className="bg-bg p-5">
+        <InView
+          as="dl"
+          className="mt-20 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-line bg-line md:grid-cols-6"
+        >
+          {sinyra.facts.map((f, i) => (
+            <div key={f.label} className="cell bg-bg p-5" style={{ "--c": i } as React.CSSProperties}>
               <dt className="meta text-faint">{f.label}</dt>
               <dd className="mt-3 text-lg leading-tight">{f.value}</dd>
             </div>
           ))}
-        </dl>
+        </InView>
         <p className="meta mt-4 text-faint">{sinyra.notes?.map((n) => n.text.replace(/\.$/, "")).join(" · ")}</p>
       </section>
 
       {/* Lab index */}
       <section id="work" aria-labelledby="work-title" className="wrap scroll-mt-20 pt-32 md:pt-44">
-        <SectionHead no="02" label="Lab index" id="work-title" title="Every product, dataset and experiment gets the next number.">
+        <SectionHead
+          no="02"
+          label="Lab index"
+          id="work-title"
+          title="Every product, dataset and experiment gets the next number."
+        >
           <p>
             The index is the record of what Ilynt Labs builds. Entries move from research to development to live; new
             ones are added as work starts.
@@ -161,10 +180,16 @@ export default function HomePage() {
               </div>
             );
           })}
-          <div className="hidden flex-col justify-end bg-bg p-6 lg:flex">
-            <Link href="/lab" className="meta text-muted hover:text-accent">
-              Full lab index →
-            </Link>
+          <div className="hidden flex-col bg-bg p-6 lg:flex">
+            <dt className="text-lg font-medium">Next areas</dt>
+            <dd className="mt-3 flex-1 text-sm leading-relaxed text-muted">
+              New entries extend this map as the lab index grows.
+            </dd>
+            <dd className="meta mt-6">
+              <Link href="/lab" className="text-muted hover:text-accent">
+                Full lab index →
+              </Link>
+            </dd>
           </div>
         </dl>
       </section>
@@ -182,8 +207,8 @@ export default function HomePage() {
           }
         >
           <p>
-            We build RAG systems, custom AI software and web applications for organizations. The pipelines behind our own
-            products are the starting point.
+            We build RAG systems, custom AI software and web applications for organizations. The pipelines behind our
+            own products are the starting point.
           </p>
         </SectionHead>
         <ol className="mt-16 border-t border-line">
@@ -198,7 +223,10 @@ export default function HomePage() {
                   {s.name}
                 </h3>
                 <p className="text-muted md:col-span-6">{s.tagline}</p>
-                <span className="meta text-muted transition-transform group-hover:translate-x-1 md:col-span-1 md:text-right" aria-hidden="true">
+                <span
+                  className="meta text-muted transition-transform group-hover:translate-x-1 md:col-span-1 md:text-right"
+                  aria-hidden="true"
+                >
                   →
                 </span>
               </Link>
@@ -215,7 +243,12 @@ export default function HomePage() {
       {/* Supporters — renders only when there are real entries */}
       {supporters.length > 0 && (
         <section aria-labelledby="supporters-title" className="wrap pt-32 md:pt-44">
-          <SectionHead no="05" label="Supported by" id="supporters-title" title="Programs and platforms behind the lab" />
+          <SectionHead
+            no="05"
+            label="Supported by"
+            id="supporters-title"
+            title="Programs and platforms behind the lab"
+          />
           <ul className="mt-12 flex flex-wrap gap-x-12 gap-y-6 border-t border-line pt-8">
             {supporters.map((s) => (
               <li key={s.name}>
@@ -268,6 +301,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-    </>
+    </PageShell>
   );
 }

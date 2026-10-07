@@ -6,9 +6,12 @@ export default function NotFound() {
     <div className="wrap pt-24 md:pt-36">
       <p className="meta text-faint">404</p>
       <h1 className="display mt-8 text-[clamp(2.75rem,7vw,6rem)]">
-        No entry at this address<span className="caret ml-2" aria-hidden="true" />
+        No entry at this address
+        <span className="caret ml-2" aria-hidden="true" />
       </h1>
-      <p className="prose-lab mt-8 max-w-lg">The page may have moved. These are the current entries in the lab index:</p>
+      <p className="prose-lab mt-8 max-w-lg">
+        The page may have moved. These are the current entries in the lab index:
+      </p>
       <ul className="mt-8 max-w-2xl border-t border-line">
         {works.map((w) => (
           <li key={w.id} className="border-b border-line">

@@ -6,6 +6,7 @@ import type { IndexRow } from "@/components/work-index";
 export function toIndexRows(list: Work[]): IndexRow[] {
   return list.map((w) => ({
     id: w.id,
+    slug: w.slug,
     href: workPath(w),
     name: w.name,
     tagline: w.tagline,

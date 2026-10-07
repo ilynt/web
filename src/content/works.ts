@@ -23,7 +23,10 @@ export const works: Work[] = [
       "Dozens of AI announcements ship every day, most of them in English. For teams that need to follow the ecosystem and their competitors, the real work is separating what actually shipped from the noise. Sinyra automates that filtering and delivers the result once a day, in Turkish, with sources.",
     steps: [
       { title: "Collect", text: "50+ company blogs, release notes and tech publications are scanned daily." },
-      { title: "Classify", text: "A language model labels each item as a product launch, model update or out of scope." },
+      {
+        title: "Classify",
+        text: "A language model labels each item as a product launch, model update or out of scope.",
+      },
       { title: "Score", text: "Launches receive an impact score from 0 to 100 and are ranked." },
       { title: "Summarize", text: "Selected stories are summarized in Turkish with a source link." },
       { title: "Deliver", text: "The briefing is emailed every weekday at 18:00." },
@@ -42,10 +45,7 @@ export const works: Work[] = [
       "Product teams, developers and managers who need to follow the AI ecosystem and their competitors' product moves.",
     inLanguage: "tr",
     links: [{ label: "Subscribe to Sinyra", href: "https://sinyra.bilalabic.com" }],
-    notes: [
-      { text: "Mobile app in development." },
-      { date: "2026-10", text: "Reached 87 active subscribers." },
-    ],
+    notes: [{ text: "Mobile app in development." }, { date: "2026-10", text: "Reached 87 active subscribers." }],
     software: {
       applicationCategory: "NewsApplication",
       operatingSystem: "Web, Email",
@@ -75,8 +75,7 @@ export const works: Work[] = [
       { label: "Published on", value: "Hugging Face · ilynt" },
     ],
     areas: ["tool-calling", "agents", "data-pipelines", "developer-infrastructure"],
-    audience:
-      "Developers and researchers who train, fine-tune or evaluate Turkish language models and agent systems.",
+    audience: "Developers and researchers who train, fine-tune or evaluate Turkish language models and agent systems.",
     inLanguage: "tr",
     links: [{ label: "Ilynt Labs on Hugging Face", href: "https://huggingface.co/ilynt" }],
     notes: [{ text: "Generation pipeline and quality checks in development." }],

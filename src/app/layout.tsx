@@ -55,10 +55,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang={site.lang}
-      className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable}`}
-    >
+    <html lang={site.lang} className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable}`}>
       <body className="min-h-dvh">
         <JsonLd data={graph(organizationLd(), websiteLd(), founderLd())} />
         <SiteHeader />

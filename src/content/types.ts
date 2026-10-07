@@ -2,13 +2,7 @@
 // Pages, JSON-LD, sitemap and llms.txt are all generated from these records.
 
 export type AreaId =
-  | "ai-products"
-  | "rag"
-  | "tool-calling"
-  | "agents"
-  | "data-pipelines"
-  | "automation"
-  | "developer-infrastructure";
+  "ai-products" | "rag" | "tool-calling" | "agents" | "data-pipelines" | "automation" | "developer-infrastructure";
 
 export type Area = {
   id: AreaId;

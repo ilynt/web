@@ -29,7 +29,9 @@ export function ContactForm({ email }: { email: string }) {
       if (res.ok) return setState("sent");
       if (res.status === 503) {
         const label = contactTopics.find((t) => t.id === data.topic)?.label ?? "";
-        const body = [data.message, "", `— ${data.name}${data.organization ? `, ${data.organization}` : ""}`].join("\n");
+        const body = [data.message, "", `— ${data.name}${data.organization ? `, ${data.organization}` : ""}`].join(
+          "\n",
+        );
         setMailto(`mailto:${email}?subject=${encodeURIComponent(label)}&body=${encodeURIComponent(body)}`);
         return setState("fallback");
       }

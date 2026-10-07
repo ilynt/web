@@ -35,11 +35,15 @@ The same records feed the pages, JSON-LD (`src/lib/seo.ts`), `sitemap.ts`, `robo
 
 **SEO/GEO:** per-page metadata goes through `pageMetadata()` in `src/lib/seo.ts` (canonical, OG, Twitter). JSON-LD is rendered with `<JsonLd>` as a single `@graph`; Organization/WebSite/Person live in the root layout and are referenced by `@id` from page-level nodes (SoftwareApplication, Dataset, Service, BreadcrumbList, FAQPage). Important facts must exist as real HTML text, never only in canvas/animation.
 
-**Motion and progressive enhancement:**
-- `signal-field.tsx` — WebGL dot-matrix hero shader. A CSS `.dot-grid` underneath is the fallback; the loop pauses offscreen/hidden and renders a single static frame under `prefers-reduced-motion`.
-- `work-index.tsx` — lab index list with a cursor-following preview card, enabled only for fine pointers without reduced motion. The card repeats row content and is `aria-hidden`.
-- Scroll reveals use CSS `animation-timeline: view()` (`.reveal`) inside `@supports` and a reduced-motion guard — no JS.
+**Motion system** — one vocabulary (signals resolve, lock in, travel along rails). All of it is gated on `prefers-reduced-motion: no-preference`; the static state is the default and contains all content. CSS lives in the "Motion system" section of `globals.css`.
+- `signal-field.tsx` — WebGL dot-matrix hero shader. Initialises on `requestIdleCallback`, pauses offscreen/hidden, drops to DPR 1 / 30fps on touch or narrow screens, fades with scroll, renders one static frame under reduced motion. A CSS `.dot-grid` is the fallback.
+- `rise-text.tsx` (hero headline words), `decode.tsx` (mono labels resolve from noise; real text is in an `sr-only` copy), `in-view.tsx` (sets `data-inview` once; CSS animates `.feed-row`, `.feed-bar`, `.rail-node`, `.cell`), `spatial-tilt.tsx` (pointer-driven 3D tilt, fine pointers only).
+- `work-glyph.tsx` — deterministic mirrored 5×5 dot matrix per work slug, coloured by status.
+- `work-index.tsx` — lab index with a cursor-following preview card (fine pointers only, `aria-hidden`).
+- Page transitions use React `<ViewTransition>` (types via `src/types/react-experimental.d.ts`). Every `page.tsx` wraps its content in `<PageShell>`; header and footer are pinned with `viewTransitionName`. A work's title morphs from its index row to the detail `h1` via the shared name `work-<slug>` — never render two elements with the same name on one page.
 - `dispatch-clock.tsx` — countdown to the next Sinyra briefing (weekdays 18:00, Europe/Istanbul, fixed UTC+3).
+
+Formatting: Prettier with `printWidth: 120` (`.prettierrc.json`); run `pnpm dlx prettier@3 --write "src/**/*.{ts,tsx,css}"`.
 
 **Design tokens** are CSS variables on `:root` in `globals.css`, exposed to Tailwind via `@theme inline` (`bg`, `raised`, `fg`, `muted`, `faint`, `line`, `accent`). Shared component classes: `.wrap`, `.meta`, `.display`, `.serif`, `.prose-lab`, `.btn`, `.status[data-status]`, `.link`. The site is dark-only.
 

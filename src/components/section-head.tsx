@@ -1,3 +1,5 @@
+import { Decode } from "./decode";
+
 export function SectionHead({
   no,
   label,
@@ -14,7 +16,7 @@ export function SectionHead({
   return (
     <div className="grid gap-6 md:grid-cols-12">
       <p className="meta text-faint md:col-span-3">
-        <span className="text-accent">{no}</span> — {label}
+        <span className="text-accent">{no}</span> — <Decode text={label} />
       </p>
       <div className="md:col-span-9">
         <h2 id={id} className="display max-w-4xl text-[clamp(2rem,4.6vw,3.75rem)]">

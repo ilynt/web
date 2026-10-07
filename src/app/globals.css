@@ -4,8 +4,8 @@
   --bg: #0a0a09;
   --bg-raised: #121211;
   --fg: #ecebe6;
-  --fg-muted: #9a9993;
-  --fg-faint: #5f5e59;
+  --fg-muted: #a9a8a2;
+  --fg-faint: #85847e;
   --line: rgb(236 235 230 / 0.1);
   --line-strong: rgb(236 235 230 / 0.2);
   --accent: #c8f53c;
@@ -211,10 +211,6 @@ body {
       animation-range: entry 0% entry 40%;
     }
   }
-
-  .signal-path {
-    animation: signal 4.8s linear infinite;
-  }
 }
 
 @keyframes blink {
@@ -244,20 +240,205 @@ body {
   }
 }
 
-@keyframes signal {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(500%);
-  }
-}
-
 @keyframes fade-in {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+/* ───────────── Motion system ─────────────
+   One vocabulary: signals resolve (decode), lock in (glyphs, scores) and
+   travel along rails (pipeline). Everything below is gated on
+   prefers-reduced-motion: no-preference; the static state is the default. */
+
+/* Hero headline: words rise out of a clip, staggered. */
+.rise-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+.rise-word > span {
+  display: inline-block;
+}
+
+/* Glyph dots, used in index rows, previews and detail headers. */
+.glyph-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rise-word > span {
+    animation: rise 0.8s var(--ease-out) both;
+    animation-delay: calc(var(--w, 0) * 24ms);
+  }
+  .fade-up {
+    animation: fade-up 0.9s var(--ease-out) both;
+    animation-delay: var(--d, 0ms);
+  }
+
+  .group:hover .glyph-dot,
+  .group:focus-visible .glyph-dot,
+  .glyph-live .glyph-dot {
+    animation: glyph-blink 1.6s var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 45ms);
+  }
+
+  /* Sinyra briefing: rows arrive like a feed, scores lock in, bars draw. */
+  [data-inview] .feed-row {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.7s var(--ease-out),
+      transform 0.7s var(--ease-out);
+    transition-delay: calc(var(--r, 0) * 160ms + 150ms);
+  }
+  [data-inview="true"] .feed-row {
+    opacity: 1;
+    transform: none;
+  }
+  [data-inview] .feed-bar {
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1s var(--ease-out);
+    transition-delay: calc(var(--r, 0) * 160ms + 350ms);
+  }
+  [data-inview="true"] .feed-bar {
+    transform: none;
+  }
+
+  /* Pipeline: each node lights as the pulse passes it. */
+  [data-inview="true"] .rail-pulse {
+    opacity: 1;
+    animation: rail 4.8s linear infinite;
+  }
+  [data-inview="true"] .rail-node {
+    animation: node-light 4.8s linear infinite;
+    animation-delay: calc(var(--n, 0) * 0.86s + 0.25s);
+  }
+
+  /* Facts and grids fill cell by cell. */
+  [data-inview] .cell {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 0.6s var(--ease-out),
+      transform 0.6s var(--ease-out);
+    transition-delay: calc(var(--c, 0) * 60ms);
+  }
+  [data-inview="true"] .cell {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(62%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes glyph-blink {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.3;
+  }
+  40% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes rail {
+  from {
+    transform: translateX(-20%);
+  }
+  to {
+    transform: translateX(520%);
+  }
+}
+
+@keyframes node-light {
+  0%,
+  100% {
+    background: var(--fg);
+    box-shadow: none;
+  }
+  4% {
+    background: var(--accent);
+    box-shadow: 0 0 0 6px rgb(200 245 60 / 0.15);
+  }
+  16% {
+    background: var(--fg);
+    box-shadow: none;
+  }
+}
+
+/* ───────────── Page transitions (View Transitions API) ───────────── */
+::view-transition-group(site-header),
+::view-transition-group(site-footer) {
+  animation: none;
+}
+
+::view-transition-old(.page-out) {
+  animation: 180ms ease-in both vt-fade reverse;
+}
+::view-transition-new(.page-in) {
+  animation:
+    320ms var(--ease-out) 120ms both vt-fade,
+    520ms var(--ease-out) both vt-rise;
+}
+
+::view-transition-group(.morph) {
+  animation-duration: 560ms;
+  animation-timing-function: var(--ease-out);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: vt-blur;
+}
+
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes vt-rise {
+  from {
+    transform: translateY(24px);
+  }
+}
+@keyframes vt-blur {
+  40% {
+    filter: blur(2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

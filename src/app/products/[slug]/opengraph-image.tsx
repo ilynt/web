@@ -12,5 +12,9 @@ export function generateStaticParams() {
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const work = products.find((p) => p.slug === slug)!;
-  return renderOg({ title: `${work.name} — ${work.tagline}`, meta: `${work.id} · Product`, accent: statusLabel[work.status] });
+  return renderOg({
+    title: `${work.name} — ${work.tagline}`,
+    meta: `${work.id} · Product`,
+    accent: statusLabel[work.status],
+  });
 }

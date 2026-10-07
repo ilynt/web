@@ -6,7 +6,7 @@ import { statusLabel, workPath, works } from "@/content/works";
 export function SiteFooter() {
   const year = new Date().getFullYear();
   return (
-    <footer className="mt-32 border-t border-line">
+    <footer className="mt-32 border-t border-line" style={{ viewTransitionName: "site-footer" }}>
       <div className="wrap grid gap-12 py-16 md:grid-cols-12">
         <div className="md:col-span-4">
           <p className="max-w-sm text-muted">{site.shortDescription}</p>
@@ -66,12 +66,19 @@ export function SiteFooter() {
       </div>
 
       <div className="wrap overflow-hidden">
-        <p
-          aria-hidden="true"
-          className="display select-none whitespace-nowrap text-[clamp(4.5rem,21vw,20rem)] leading-[0.78] text-[#181817]"
-        >
-          ilynt labs
-        </p>
+        {/* Decorative wordmark drawn as SVG so it is not treated as body text. */}
+        <svg aria-hidden="true" viewBox="0 0 1000 178" className="block w-full select-none">
+          <text
+            x="0"
+            y="150"
+            textLength="1000"
+            lengthAdjust="spacingAndGlyphs"
+            fill="#181817"
+            style={{ font: "500 205px var(--font-geist-sans)", letterSpacing: "-0.035em" }}
+          >
+            ilynt labs
+          </text>
+        </svg>
       </div>
 
       <div className="wrap meta flex flex-wrap justify-between gap-4 border-t border-line py-6 text-faint">
