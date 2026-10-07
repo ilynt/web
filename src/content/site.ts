@@ -19,7 +19,7 @@ export const site = {
 
 export const founder = {
   name: "Bilal Abiç",
-  role: "Founder & Developer",
+  role: "Founder & AI Developer",
   linkedin: "https://www.linkedin.com/in/bilalabic/",
 } as const;
 

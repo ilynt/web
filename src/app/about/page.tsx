@@ -40,7 +40,7 @@ const faq = [
   },
   {
     q: "Who is behind Ilynt Labs?",
-    a: `${site.name} was founded by ${founder.name}, who works as its ${founder.role.toLowerCase()}.`,
+    a: `${site.name} was founded by ${founder.name} (${founder.role}).`,
   },
   {
     q: "How can I contact Ilynt Labs?",
