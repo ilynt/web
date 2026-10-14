@@ -7,6 +7,8 @@ export const site = {
   locale: "en_US",
   lang: "en",
   email: "bilal@ilyntlabs.com",
+  /** Google Calendar appointment schedule link; the "Book a call" button appears when set. */
+  booking: "" as string,
   description:
     "Ilynt Labs is an independent AI product and R&D studio based in Türkiye. It builds AI products, RAG systems, Turkish tool-calling datasets and custom AI software for organizations.",
   shortDescription:

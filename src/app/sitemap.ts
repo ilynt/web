@@ -12,6 +12,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...services.map((s) => ({ path: `/solutions/${s.slug}`, priority: 0.7 })),
     { path: "/about", priority: 0.6 },
     { path: "/contact", priority: 0.5 },
+    { path: "/changelog", priority: 0.5 },
+    { path: "/privacy", priority: 0.2 },
   ];
   // The site is fully static, so the build time is when every page last changed.
   const lastModified = new Date();

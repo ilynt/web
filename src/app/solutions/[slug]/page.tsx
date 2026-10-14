@@ -61,6 +61,11 @@ export default async function ServicePage({ params }: PageProps<"/solutions/[slu
             <Link href={`/contact?topic=${service.slug}`} className="btn btn-primary">
               Discuss a project <span className="arrow">→</span>
             </Link>
+            {site.booking && (
+              <a href={site.booking} className="btn">
+                Book a call <span className="arrow">↗</span>
+              </a>
+            )}
             <a href={`mailto:${site.email}?subject=${encodeURIComponent(service.name)}`} className="btn">
               {site.email}
             </a>

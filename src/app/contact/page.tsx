@@ -56,6 +56,11 @@ export default function ContactPage() {
                 <dd>Türkiye</dd>
               </div>
             </dl>
+            {site.booking && (
+              <a href={site.booking} className="btn btn-primary mt-8">
+                Book a call <span className="arrow">↗</span>
+              </a>
+            )}
           </header>
           <div className="md:col-span-6 md:col-start-7 md:pt-4">
             <Suspense fallback={<div className="h-[640px]" />}>

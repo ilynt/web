@@ -1,25 +1,7 @@
 import { contactTopics, type ContactPayload } from "@/content/contact";
-import { site } from "@/content/site";
+import { clean, isEmail, line, mailResponse, rateLimited, sendMail } from "@/lib/mail";
 
-// Sends contact form submissions through Resend's REST API.
-// Required env: RESEND_API_KEY, CONTACT_FROM_EMAIL. Optional: CONTACT_TO_EMAIL.
-
-const WINDOW_MS = 10 * 60 * 1000;
-const MAX_PER_WINDOW = 5;
-const hits = new Map<string, number[]>();
-
-function rateLimited(ip: string) {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  recent.push(now);
-  hits.set(ip, recent);
-  return recent.length > MAX_PER_WINDOW;
-}
-
-const clean = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
-// Single-line fields end up in the subject and headers: strip line breaks.
-const line = (v: unknown, max: number) => clean(v, max).replace(/[\r\n]+/g, " ");
-
+// Contact form submissions → email to the lab inbox (see src/lib/mail.ts).
 export async function POST(request: Request) {
   let body: Partial<ContactPayload>;
   try {
@@ -30,9 +12,7 @@ export async function POST(request: Request) {
 
   // Bots fill every field; pretend success.
   if (clean(body.website, 200)) return Response.json({ ok: true });
-
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  if (rateLimited(ip)) return Response.json({ error: "rate_limited" }, { status: 429 });
+  if (rateLimited(request)) return Response.json({ error: "rate_limited" }, { status: 429 });
 
   const data = {
     name: line(body.name, 120),
@@ -45,15 +25,11 @@ export async function POST(request: Request) {
   };
 
   const topic = contactTopics.find((t) => t.id === data.topic);
-  if (!data.name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email) || !topic || data.message.length < 10) {
+  if (!data.name || !isEmail(data.email) || !topic || data.message.length < 10) {
     return Response.json({ error: "invalid_fields" }, { status: 422 });
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.CONTACT_FROM_EMAIL;
-  if (!apiKey || !from) return Response.json({ error: "not_configured" }, { status: 503 });
-
-  const lines = [
+  const text = [
     `Topic: ${topic.label}`,
     `Name: ${data.name}`,
     `Email: ${data.email}`,
@@ -62,20 +38,9 @@ export async function POST(request: Request) {
     !!data.volume && `Document volume: ${data.volume}`,
     "",
     data.message,
-  ].filter((l) => l !== false);
+  ]
+    .filter((l) => l !== false)
+    .join("\n");
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from,
-      to: process.env.CONTACT_TO_EMAIL || site.email,
-      reply_to: data.email,
-      subject: `[ilyntlabs.com] ${topic.label} — ${data.name}`,
-      text: lines.join("\n"),
-    }),
-  });
-
-  if (!res.ok) return Response.json({ error: "send_failed" }, { status: 502 });
-  return Response.json({ ok: true });
+  return mailResponse(await sendMail({ subject: `${topic.label} — ${data.name}`, text, replyTo: data.email }));
 }

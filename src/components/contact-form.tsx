@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { contactTopics, ragDeploymentOptions } from "@/content/contact";
@@ -48,7 +49,7 @@ export function ContactForm({ email }: { email: string }) {
           Received
         </p>
         <p className="mt-4 text-2xl font-medium tracking-tight">Thanks — your message is in.</p>
-        <p className="mt-3 text-muted">We reply from {email}, usually within two working days.</p>
+        <p className="mt-3 text-muted">We will reply from {email}.</p>
       </div>
     );
   }
@@ -138,6 +139,13 @@ export function ContactForm({ email }: { email: string }) {
           <input name="website" tabIndex={-1} autoComplete="off" />
         </label>
       </div>
+
+      <p className="text-sm text-muted">
+        We use your details only to reply.{" "}
+        <Link href="/privacy" className="link">
+          Privacy
+        </Link>
+      </p>
 
       <div className="flex flex-wrap items-center gap-6 pt-2">
         <button type="submit" disabled={state === "sending"} className="btn btn-primary disabled:opacity-60">

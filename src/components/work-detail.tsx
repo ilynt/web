@@ -7,6 +7,7 @@ import { BriefingAnatomy } from "./briefing-anatomy";
 import { DispatchClock } from "./dispatch-clock";
 import { JsonLd } from "./json-ld";
 import { PageShell, WorkTitleTransition } from "./page-shell";
+import { NotifyForm } from "./notify-form";
 import { Pipeline } from "./pipeline";
 import { WorkGlyph } from "./work-glyph";
 
@@ -73,6 +74,11 @@ export function WorkDetail({ work }: { work: Work }) {
                     {l.label} <span className="arrow">↗</span>
                   </a>
                 ))}
+              </div>
+            )}
+            {work.status !== "live" && (
+              <div className="relative mt-10 max-w-md">
+                <NotifyForm slug={work.slug} label={work.id} />
               </div>
             )}
           </div>

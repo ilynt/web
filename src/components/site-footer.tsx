@@ -85,9 +85,12 @@ export function SiteFooter() {
         <p>
           © {year} {site.legalName}
         </p>
-        <p className="flex gap-6">
-          <Link href="/about" className="inline-block py-1 hover:text-fg">
-            About
+        <p className="flex flex-wrap gap-x-6">
+          <Link href="/changelog" className="inline-block py-1 hover:text-fg">
+            Changelog
+          </Link>
+          <Link href="/privacy" className="inline-block py-1 hover:text-fg">
+            Privacy
           </Link>
           <a href="/llms.txt" className="inline-block py-1 hover:text-fg">
             llms.txt

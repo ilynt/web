@@ -108,8 +108,9 @@ export function WorkIndex({ rows, nextId }: { rows: IndexRow[]; nextId: string }
           className="grid grid-cols-[auto_1fr] items-baseline gap-x-6 py-6 text-faint md:grid-cols-12 md:py-7"
         >
           <span className="meta md:col-span-1">{nextId}</span>
-          <span className="md:col-span-11">
+          <span className="flex items-center gap-4 md:col-span-11">
             <span className="caret opacity-60" />
+            <span className="meta">Next entry</span>
           </span>
         </li>
       </ol>
