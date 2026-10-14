@@ -1,4 +1,4 @@
-import { services } from "@/content/services";
+import { services, supporters } from "@/content/services";
 import { areas, founder, site } from "@/content/site";
 import { kindLabel, statusLabel, workPath, works } from "@/content/works";
 import { absoluteUrl } from "@/lib/seo";
@@ -28,6 +28,14 @@ export function GET() {
     "",
     ...services.map((s) => `- [${s.name}](${absoluteUrl(`/solutions/${s.slug}`)}): ${s.summary}`),
     "",
+    ...(supporters.length > 0
+      ? [
+          "## Programs",
+          "",
+          ...supporters.map((s) => `- [${s.name}](${s.href}) (since ${s.since}): ${s.description}`),
+          "",
+        ]
+      : []),
     "## About",
     "",
     `- [About ${site.name}](${absoluteUrl("/about")}): who is behind the lab, key facts and official pages.`,

@@ -93,5 +93,15 @@ export function getService(slug: string) {
 }
 
 // Organizations, programs and platforms that support Ilynt Labs.
-// The homepage section renders only when this list is non-empty.
-export const supporters: Supporter[] = [];
+// Plain text only: no logos, and no wording that implies partnership,
+// sponsorship or investment (see AWS trademark guidelines for AWS programs).
+// Up to three entries render as one compact line on the homepage.
+export const supporters: Supporter[] = [
+  {
+    name: "Kiro startup program",
+    relation: "via AWS Startups",
+    href: "https://kiro.dev/startups/",
+    description: "Credits for Kiro, an agentic development environment, provided through AWS Startups.",
+    since: "2026-10-13",
+  },
+];

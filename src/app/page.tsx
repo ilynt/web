@@ -231,19 +231,33 @@ export default function HomePage() {
         </dl>
       </section>
 
-      {/* Supporters — renders only when there are real entries */}
-      {supporters.length > 0 && (
+      {/* Programs — plain text, no logos. One quiet line until there are more than three. */}
+      {supporters.length > 0 && supporters.length <= 3 && (
+        <section aria-labelledby="programs-title" className="wrap pt-24 md:pt-32">
+          <div className="flex flex-wrap items-baseline gap-x-10 gap-y-3 border-y border-line py-5">
+            <h2 id="programs-title" className="meta text-faint">
+              Programs
+            </h2>
+            <ul className="flex flex-wrap gap-x-10 gap-y-2">
+              {supporters.map((s) => (
+                <li key={s.name}>
+                  <a href={s.href} className="group inline-flex items-baseline gap-3 py-1">
+                    <span className="group-hover:text-accent">{s.name}</span>
+                    <span className="meta text-faint">{s.relation}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+      {supporters.length > 3 && (
         <section aria-labelledby="supporters-title" className="wrap pt-32 md:pt-44">
-          <SectionHead
-            no="05"
-            label="Supported by"
-            id="supporters-title"
-            title="Programs and platforms behind the lab"
-          />
+          <SectionHead no="05" label="Programs" id="supporters-title" title="Programs and platforms behind the lab" />
           <ul className="mt-12 flex flex-wrap gap-x-12 gap-y-6 border-t border-line pt-8">
             {supporters.map((s) => (
               <li key={s.name}>
-                <a href={s.href} className="group flex items-baseline gap-3">
+                <a href={s.href} className="group flex items-baseline gap-3 py-1">
                   <span className="text-lg group-hover:text-accent">{s.name}</span>
                   <span className="meta text-faint">{s.relation}</span>
                 </a>
@@ -258,7 +272,7 @@ export default function HomePage() {
         <div className="grid gap-12 border-t border-line pt-10 md:grid-cols-12">
           <div className="md:col-span-3">
             <h2 id="people-title" className="meta text-faint">
-              <span className="text-accent">{supporters.length > 0 ? "06" : "05"}</span> — Behind the work
+              <span className="text-accent">{supporters.length > 3 ? "06" : "05"}</span> — Behind the work
             </h2>
           </div>
           <div className="md:col-span-4">

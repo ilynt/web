@@ -13,6 +13,7 @@ export type ChangelogEntry = {
 
 const labEntries: ChangelogEntry[] = [
   { date: "2026-10-14", text: "Privacy notice published; lab entries in development accept release notifications." },
+  { date: "2026-10-13", text: "Accepted into the Kiro startup program." },
   {
     date: "2026-10-07",
     text: "ilyntlabs.com launched with the lab index, the Sinyra product page and solutions for organizations.",

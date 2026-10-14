@@ -82,6 +82,8 @@ export type Supporter = {
   /** e.g. "Program", "Infrastructure", "Technology partner" */
   relation: string;
   href: string;
-  /** Optional monochrome SVG in /public/supporters */
-  logo?: string;
+  /** One factual sentence on what the program provides. Used on /about and in llms.txt. */
+  description: string;
+  /** "YYYY-MM-DD" the lab joined. */
+  since: string;
 };

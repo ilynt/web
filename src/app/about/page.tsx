@@ -1,7 +1,7 @@
 import { PageShell } from "@/components/page-shell";
 import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
-import { services } from "@/content/services";
+import { services, supporters } from "@/content/services";
 import { areas, founder, site } from "@/content/site";
 import { products, workPath, works } from "@/content/works";
 import { absoluteUrl, breadcrumbLd, graph, ids, pageMetadata } from "@/lib/seo";
@@ -12,6 +12,9 @@ export const metadata = pageMetadata({
     "About Ilynt Labs: an independent AI product and R&D studio in Türkiye founded by Bilal Abiç. What the lab builds, who is behind it and where to find it.",
   path: "/about",
 });
+
+const monthYear = (date: string) =>
+  new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
 
 // Plain question/answer pairs: the most citable form of the lab's key facts.
 const faq = [
@@ -42,6 +45,14 @@ const faq = [
     q: "Who is behind Ilynt Labs?",
     a: `${site.name} was founded by ${founder.name} (${founder.role}).`,
   },
+  ...(supporters.length > 0
+    ? [
+        {
+          q: "Which programs support Ilynt Labs?",
+          a: supporters.map((s) => `${s.name} (since ${monthYear(s.since)}): ${s.description}`).join(" "),
+        },
+      ]
+    : []),
   {
     q: "How can I contact Ilynt Labs?",
     a: `By email at ${site.email} or through the contact form at ${absoluteUrl("/contact")}.`,

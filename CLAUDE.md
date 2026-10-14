@@ -28,7 +28,7 @@ Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 (CSS-first 
 
 - `site.ts` — organization facts, founder, official profiles, work areas.
 - `works.ts` — the **lab index**: every product, dataset, experiment and open-source project as a `Work` with a sequential id (`IL-001`, `IL-002`, …) and a `status` (`live` / `building` / `research`). `kind: "product"` routes to `/products/[slug]`; every other kind routes to `/lab/[slug]` (`workPath()`). Never renumber ids; append new entries at the end.
-- `services.ts` — solutions for organizations (`/solutions/[slug]`; optional `steps` render a pipeline, `relatedWorks` lists genuinely related lab slugs) and `supporters` (the homepage supporters section renders only when this array is non-empty).
+- `services.ts` — solutions for organizations (`/solutions/[slug]`; optional `steps` render a pipeline, `relatedWorks` lists genuinely related lab slugs) and `supporters` (programs the lab takes part in; up to three render as one plain-text "Programs" line on the homepage, more as a full section; also feed an /about FAQ entry and llms.txt). Plain text only — no logos, and never "partner", "backed by", "verified" or anything implying sponsorship (AWS trademark guidelines).
 - `changelog.ts` — dated lab-wide entries; dated `notes` on works are merged in automatically (`/changelog`).
 - `contact.ts` — contact form topics; `/contact?topic=<id>` preselects one. `enterprise-rag` reveals extra RAG fields.
 
