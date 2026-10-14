@@ -153,6 +153,7 @@ export default function AboutPage() {
               { label: "Website", href: site.url },
               { label: "GitHub", href: site.profiles.github },
               { label: "Hugging Face", href: site.profiles.huggingface },
+              { label: "LinkedIn", href: site.profiles.linkedin },
               ...products.map((p) => ({ label: p.name, href: p.links[0].href })),
               { label: "Email", href: `mailto:${site.email}`, text: site.email },
             ].map((l) => (

@@ -48,6 +48,7 @@ export function GET() {
     "",
     `- GitHub: ${site.profiles.github}`,
     `- Hugging Face: ${site.profiles.huggingface}`,
+    `- LinkedIn: ${site.profiles.linkedin}`,
     `- ${founder.name} on LinkedIn: ${founder.linkedin}`,
     "",
   ].join("\n");

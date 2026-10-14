@@ -16,6 +16,7 @@ export const site = {
   profiles: {
     github: "https://github.com/ilynt",
     huggingface: "https://huggingface.co/ilynt",
+    linkedin: "https://www.linkedin.com/company/ilyntlabs/",
   },
 } as const;
 

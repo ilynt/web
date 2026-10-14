@@ -54,7 +54,7 @@ export function organizationLd(): Json {
     description: site.description,
     foundingLocation: { "@type": "Country", name: "Türkiye" },
     founder: { "@id": ids.founder },
-    sameAs: [site.profiles.github, site.profiles.huggingface],
+    sameAs: [site.profiles.linkedin, site.profiles.github, site.profiles.huggingface],
     contactPoint: {
       "@type": "ContactPoint",
       email: site.email,

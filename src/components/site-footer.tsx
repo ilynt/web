@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { founder, site } from "@/content/site";
+import { site } from "@/content/site";
 import { services } from "@/content/services";
 import { statusLabel, workPath, works } from "@/content/works";
 
@@ -57,7 +57,7 @@ export function SiteFooter() {
               </a>
             </li>
             <li>
-              <a href={founder.linkedin} className="inline-block py-1 hover:text-accent">
+              <a href={site.profiles.linkedin} className="inline-block py-1 hover:text-accent" rel="me">
                 LinkedIn
               </a>
             </li>
